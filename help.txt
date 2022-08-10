@@ -1,0 +1,23 @@
+
+
+===============================================================================
+                      Grocery Store Management System
+                                Version 1.0
+                                Abhik Ghosh
+                              XII - Aryabhatta
+                                Help Section
+===============================================================================
+
+This is a Grocery store records management program responsible for management of items in stock.
+
+===================
+ Available Actions
+===================
+
+1] Display Records
+2] Modify Records
+3] Search Records
+4] Quit
+5] To Show This Menu
+
+Please choose either options in the prompt

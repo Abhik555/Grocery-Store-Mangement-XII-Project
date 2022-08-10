@@ -1,0 +1,19 @@
+
+
+===============================================================================
+                Please Select A Operation To Perform From Below
+===============================================================================
+
+===================
+ Available Actions
+===================
+
+1] Display Records
+2] Modify Records
+3] Search Records
+4] Quit
+
+===============================================================================
+Enter 1 to Display Records , 2 to Modify Records , 3 to Search or Query Records
+                         4 to QUIT the application
+===============================================================================
