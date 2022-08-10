@@ -35,7 +35,7 @@ def app():
         elif cm.lower() == "5" or cm.lower() == "help" or cm.lower() == "h":
             loadtext("help.txt", 'p')
 
-        process(option)
+        process(option , db)
 
 
 if __name__ == "__main__":

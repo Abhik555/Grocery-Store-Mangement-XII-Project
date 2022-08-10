@@ -3,6 +3,18 @@ import getpass
 d = None
 
 
+def load_data():
+    try:
+        with open('parameter.txt', 'r') as f:
+            x = f.readlines()
+            out = []
+            for i in x:
+                out.append(i.replace('\n', ''))
+            return out
+    except:
+        print("Value not found error")
+
+
 def loadtext(file, mode):
     try:
         with open(file, 'r') as f:
@@ -74,7 +86,7 @@ def execute(cursor, command):
     return cursor.fetchall()
 
 
-def checkdb(db, database_name="store" , table_name="Inventory"):
+def checkdb(db, database_name=load_data()[0], table_name=load_data()[1]):
     cur = db.cursor()
     data = execute(cur, 'show databases')
     dbs = tuple()
@@ -88,12 +100,16 @@ def checkdb(db, database_name="store" , table_name="Inventory"):
         if i == database_name:
             exist = True
 
+    if exist:
+        return
+
     if not exist:
         execute(cur, "create database store")
-        execute(cur,"create table "+table_name+" (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
+        execute(cur,
+                "create table " + table_name.lower() + " (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
     else:
-        execute(cur , 'use store')
-        data = execute(cur ,"show tables")
+        execute(cur, 'use store')
+        data = execute(cur, "show tables")
         tbls = tuple()
         there = False
 
@@ -103,34 +119,51 @@ def checkdb(db, database_name="store" , table_name="Inventory"):
                     tbls += (j,)
 
         for i in tbls:
-            if i == table_name:
+            if i == table_name.lower():
                 there = True
 
         if there:
             return
         else:
-            execute(cur , 'use store')
-            execute(cur,"create table " + table_name + " (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
+            execute(cur, 'use store')
+            execute(cur,
+                    "create table " + table_name + " (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
 
 
-
-
-def display():
+def display(cur):
     pass
 
 
-def modify():
+def modify(cur):
+    x = load_data()
+    change_values('add', cur, x[0], x[1], (1, 'PRD 1', 200, 250, 1000, 'YES', '15-4-22', 5, 45))
+
+
+def search(cur):
     pass
 
 
-def search():
-    pass
+def change_values(action, cursor, db_name, table_name, values=None):
+    if action.lower() == "add" or action.lower() == 'a':
+        if values is None:
+            return
+        else:
+            execute(cursor, 'use ' + db_name)
+            execute(cursor, 'insert into ' + table_name + ' values' + str(values))
 
 
-def process(option):
+def process(option, db):
     if option == 1:
-        display()
+        display(db.cursor())
+        db.commit()
     elif option == 2:
-        modify()
+        modify(db.cursor())
+        db.commit()
     elif option == 3:
-        search()
+        search(db.cursor())
+        db.commit()
+
+
+if __name__ == "__main__":
+    load_data()
+    input()
