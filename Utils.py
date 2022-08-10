@@ -1,5 +1,7 @@
 import getpass
 
+d = None
+
 
 def loadtext(file, mode):
     try:
@@ -36,6 +38,7 @@ def savedpass(mode, data=None):
 
 
 def connect(connector):
+    global d
     x = input("Do you want to load saved login credentials? Y/N: ")
     if x.lower() == 'y':
         hostname, username, passwd = savedpass('g')
@@ -58,6 +61,7 @@ def connect(connector):
             c = input("Do you want to save your login credentials? Y/N: ")
             if c.lower() == 'y':
                 savedpass('s', [hostname + '\n', username + '\n', passwd + '\n'])
+        d = db
         return db
     except:
         print()
@@ -70,5 +74,63 @@ def execute(cursor, command):
     return cursor.fetchall()
 
 
-def process(option):
+def checkdb(db, database_name="store" , table_name="Inventory"):
+    cur = db.cursor()
+    data = execute(cur, 'show databases')
+    dbs = tuple()
+    exist = False
+    for i in data:
+        for j in i:
+            if j not in dbs:
+                dbs += (j,)
+
+    for i in dbs:
+        if i == database_name:
+            exist = True
+
+    if not exist:
+        execute(cur, "create database store")
+        execute(cur,"create table "+table_name+" (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
+    else:
+        execute(cur , 'use store')
+        data = execute(cur ,"show tables")
+        tbls = tuple()
+        there = False
+
+        for i in data:
+            for j in i:
+                if j not in tbls:
+                    tbls += (j,)
+
+        for i in tbls:
+            if i == table_name:
+                there = True
+
+        if there:
+            return
+        else:
+            execute(cur , 'use store')
+            execute(cur,"create table " + table_name + " (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
+
+
+
+
+def display():
     pass
+
+
+def modify():
+    pass
+
+
+def search():
+    pass
+
+
+def process(option):
+    if option == 1:
+        display()
+    elif option == 2:
+        modify()
+    elif option == 3:
+        search()

@@ -16,6 +16,7 @@ def app():
     else:
         print("Error Connecting to database Please Restart")
         return
+    checkdb(db)
     isrunning = True
     while isrunning:
         if option is None:
