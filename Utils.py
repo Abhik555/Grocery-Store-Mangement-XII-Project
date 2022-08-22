@@ -1,4 +1,5 @@
 import getpass
+from tabulate import tabulate
 
 d = None
 
@@ -131,7 +132,10 @@ def checkdb(db, database_name=load_data()[0], table_name=load_data()[1]):
 
 
 def display(cur):
-    pass
+    execute(cur,'use '+load_data()[0])
+    x = execute( cur,'select * from '+load_data()[1])
+    print()
+    print(tabulate(x , ['SNO' ,'PRODUCTNAME' ,'MRP' ,'PRICE' ,'STOCK' , 'AVAILABLE' , 'EXPIERYDATE','DISCOUNT', 'PROFIT MARGIN']))
 
 
 def modify(cur):
