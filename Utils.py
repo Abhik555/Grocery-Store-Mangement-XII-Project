@@ -132,16 +132,17 @@ def checkdb(db, database_name=load_data()[0], table_name=load_data()[1]):
 
 
 def display(cur):
-    execute(cur,'use '+load_data()[0])
-    x = execute( cur,'select * from '+load_data()[1])
+    execute(cur, 'use ' + load_data()[0])
+    x = execute(cur, 'select * from ' + load_data()[1])
     print()
-    print(tabulate(x , ['SNO' ,'PRODUCTNAME' ,'MRP' ,'PRICE' ,'STOCK' , 'AVAILABLE' , 'EXPIERYDATE','DISCOUNT', 'PROFIT MARGIN']))
+    print(tabulate(x, ['SNO', 'PRODUCTNAME', 'MRP', 'PRICE', 'STOCK', 'AVAILABLE', 'EXPIERYDATE', 'DISCOUNT',
+                       'PROFIT MARGIN']))
 
 
 def modify(cur):
     print()
     v = input("Do you want to add a record or delete a record(Type Add or Delete): ")
-    if v.lower() == 'add' or v.lower() =='a':
+    if v.lower() == 'add' or v.lower() == 'a':
         display(cur)
         print()
         SNO = input("Enter Product No: ")
@@ -154,7 +155,8 @@ def modify(cur):
         DISCOUNT = input("Enter Discount: ")
         PROFIT = input("Enter Profit Margin: ")
         try:
-            change_values(v,cur,(int(SNO),PRODUCTNAME,int(MRP),int(PRICE),int(STOCK),AV,EXPIERYDATE,int(DISCOUNT),int(PROFIT)))
+            change_values(v, cur, (
+            int(SNO), PRODUCTNAME, int(MRP), int(PRICE), int(STOCK), AV, EXPIERYDATE, int(DISCOUNT), int(PROFIT)))
         except:
             print('Operation Failed!')
             return
@@ -165,7 +167,7 @@ def modify(cur):
         display(cur)
         n = int(input("Enter SNO of item you wish to delete: "))
         try:
-            change_values(v,cur,n)
+            change_values(v, cur, n)
         except:
             print("Operation Failed!")
         print('Item Purged')
@@ -175,7 +177,75 @@ def modify(cur):
 
 
 def search(cur):
-    pass
+    print()
+    c = None
+    arg = None
+    ch = input('Do you want all columns to display ? Y/N: ')
+    if ch.lower() == 'n':
+        c = []
+        display(cur)
+        print()
+        while True:
+            _ = input('Enter Column you want to display Name: ')
+            c.append(_)
+            e = input('Do you want continue? Y/N:')
+            if e.lower() == 'no' or e.lower() == 'n':
+                break
+    ch1 = input('Do you want to enter a search query? Y/N: ')
+    if ch1.lower() == 'y':
+        arg = ''
+        display(cur)
+        print()
+        while True:
+            _ = input("Enter MYSQL Argument: ")
+            arg += _
+            e = input('Do you want to continue? Y/N:')
+            if e.lower() == 'no' or e.lower() == 'n':
+                break
+            else:
+                v = input('Do you want a AND Logical Operator or OR Logical Operator-> AND/OR/A/R: ')
+                if v.lower() == 'and' or v.lower() == 'a':
+                    arg += ' and '
+                elif v.lower() == 'or' or v.lower() == 'r':
+                    arg += ' or '
+                else:
+                    break
+    print()
+    find(cur , c , arg)
+
+
+def find(cur, columns=None, condiitons=None):
+    d = load_data()
+    x = None
+    selection = ''
+
+    execute(cur, 'use ' + d[0])
+
+    if columns is not None:
+        for i in columns:
+            if len(selection) == 0:
+                selection += i
+            else:
+                selection += ',' + i
+    if columns is None:
+        if condiitons is None:
+            x = execute(cur, 'select *' + ' from ' + d[1])
+        else:
+            x = execute(cur, 'select *' + ' from ' + d[1] + ' where ' + condiitons + ';')
+    else:
+        if condiitons is None:
+            x = execute(cur, 'select ' + selection + ' from ' + d[1])
+        else:
+            x = execute(cur, 'select ' + selection + ' from ' + d[1] + ' where ' + condiitons + ';')
+    print()
+    if columns is not None:
+        print(
+            tabulate(x,
+                     columns)
+        )
+    else:
+        print(tabulate(x, ['SNO', 'PRODUCTNAME', 'MRP', 'PRICE', 'STOCK', 'AVAILABLE', 'EXPIERYDATE', 'DISCOUNT',
+                           'PROFIT MARGIN']))
 
 
 def change_values(action, cursor, values, db_name=load_data()[0], table_name=load_data()[1]):
@@ -190,7 +260,7 @@ def change_values(action, cursor, values, db_name=load_data()[0], table_name=loa
             return
         else:
             execute(cursor, 'use ' + db_name)
-            execute(cursor , 'delete from '+table_name+' where SNO='+str(values))
+            execute(cursor, 'delete from ' + table_name + ' where SNO=' + str(values))
 
 
 def process(option, db):
