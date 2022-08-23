@@ -139,21 +139,58 @@ def display(cur):
 
 
 def modify(cur):
-    x = load_data()
-    change_values('add', cur, x[0], x[1], (1, 'PRD 1', 200, 250, 1000, 'YES', '15-4-22', 5, 45))
+    print()
+    v = input("Do you want to add a record or delete a record(Type Add or Delete): ")
+    if v.lower() == 'add' or v.lower() =='a':
+        display(cur)
+        print()
+        SNO = input("Enter Product No: ")
+        PRODUCTNAME = input("Enter product name: ")
+        MRP = input("Enter MRP: ")
+        PRICE = input("Enter Price: ")
+        STOCK = input("Enter Stock: ")
+        AV = input("Available: ")
+        EXPIERYDATE = input("Enter ExpieryDate: ")
+        DISCOUNT = input("Enter Discount: ")
+        PROFIT = input("Enter Profit Margin: ")
+        try:
+            change_values(v,cur,(int(SNO),PRODUCTNAME,int(MRP),int(PRICE),int(STOCK),AV,EXPIERYDATE,int(DISCOUNT),int(PROFIT)))
+        except:
+            print('Operation Failed!')
+            return
+        print("Values Added!")
+        display(cur)
+    elif v.lower() == 'delete' or v.lower() == 'd':
+        print()
+        display(cur)
+        n = int(input("Enter SNO of item you wish to delete: "))
+        try:
+            change_values(v,cur,n)
+        except:
+            print("Operation Failed!")
+        print('Item Purged')
+        display(cur)
+    else:
+        return
 
 
 def search(cur):
     pass
 
 
-def change_values(action, cursor, db_name, table_name, values=None):
+def change_values(action, cursor, values, db_name=load_data()[0], table_name=load_data()[1]):
     if action.lower() == "add" or action.lower() == 'a':
         if values is None:
             return
         else:
             execute(cursor, 'use ' + db_name)
             execute(cursor, 'insert into ' + table_name + ' values' + str(values))
+    elif action.lower() == 'delete' or action.lower() == 'd':
+        if values is None:
+            return
+        else:
+            execute(cursor, 'use ' + db_name)
+            execute(cursor , 'delete from '+table_name+' where SNO='+str(values))
 
 
 def process(option, db):

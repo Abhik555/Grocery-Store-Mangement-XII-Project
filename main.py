@@ -26,6 +26,7 @@ def app():
         cm = input("Please Enter your Choice or Type Help for more information: ")
         if cm.lower() == "quit" or cm.lower() == 'q' or cm.lower() == "4":
             isrunning = False
+            break
         elif cm.lower() == "1":
             option = 1
         elif cm.lower() == "2":
@@ -36,7 +37,8 @@ def app():
             loadtext("help.txt", 'p')
 
         process(option, db)
-        option = 0
+        input('Press enter to continue...')
+        option = None
 
 
 if __name__ == "__main__":
