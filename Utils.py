@@ -1,8 +1,6 @@
 import getpass
 from tabulate import tabulate
 
-d = None
-
 
 def load_data():
     try:
@@ -137,11 +135,12 @@ def display(cur):
     print()
     print(tabulate(x, ['SNO', 'PRODUCTNAME', 'MRP', 'PRICE', 'STOCK', 'AVAILABLE', 'EXPIERYDATE', 'DISCOUNT',
                        'PROFIT MARGIN']))
+    print()
 
 
 def modify(cur):
     print()
-    v = input("Do you want to add a record or delete a record(Type Add or Delete): ")
+    v = input("Do you want to add a record or delete a record(Type Add or Delete or Edit): ")
     if v.lower() == 'add' or v.lower() == 'a':
         display(cur)
         print()
@@ -156,7 +155,7 @@ def modify(cur):
         PROFIT = input("Enter Profit Margin: ")
         try:
             change_values(v, cur, (
-            int(SNO), PRODUCTNAME, int(MRP), int(PRICE), int(STOCK), AV, EXPIERYDATE, int(DISCOUNT), int(PROFIT)))
+                int(SNO), PRODUCTNAME, int(MRP), int(PRICE), int(STOCK), AV, EXPIERYDATE, int(DISCOUNT), int(PROFIT)))
         except:
             print('Operation Failed!')
             return
@@ -172,6 +171,22 @@ def modify(cur):
             print("Operation Failed!")
         print('Item Purged')
         display(cur)
+    elif v.lower() == 'edit' or v.lower() == 'e':
+        print()
+        display(cur)
+        print()
+        x = load_data()
+        no = input('Enter SNO of entry you want to edit: ')
+        c = input("Enter column name(BE SPECIFIC): ")
+        v = input("Enter new value: ")
+        try:
+            execute(cur, 'update ' + x[1] + ' set ' + c.upper() + '= "' + v + '" where SNO=' + no)
+            print()
+            display(cur)
+            print()
+        except Exception:
+            print('Input Error')
+            return
     else:
         return
 
@@ -197,7 +212,7 @@ def search(cur):
         display(cur)
         print()
         while True:
-            _ = input("Enter MYSQL Argument: ")
+            _ = input("Enter MYSQL Argument(EG: price > 100): ")
             arg += _
             e = input('Do you want to continue? Y/N:')
             if e.lower() == 'no' or e.lower() == 'n':
@@ -211,7 +226,7 @@ def search(cur):
                 else:
                     break
     print()
-    find(cur , c , arg)
+    find(cur, c, arg)
 
 
 def find(cur, columns=None, condiitons=None):
@@ -276,5 +291,4 @@ def process(option, db):
 
 
 if __name__ == "__main__":
-    load_data()
-    input()
+    input("This file cannot be run on its own Execute main.py!")
