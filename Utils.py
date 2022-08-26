@@ -99,11 +99,9 @@ def checkdb(db, database_name=load_data()[0], table_name=load_data()[1]):
         if i == database_name:
             exist = True
 
-    if exist:
-        return
-
     if not exist:
         execute(cur, "create database store")
+        execute(cur , 'use store')
         execute(cur,
                 "create table " + table_name.lower() + " (SNO integer(255) NOT NULL PRIMARY KEY,PRODUCTNAME varchar(30),MRP integer(255),PRICE integer(255),STOCK integer(255),AVAILABE varchar(4),EXPIARYDATE date,DISCOUNT integer(255),PROFITMARGIN integer(255))")
     else:

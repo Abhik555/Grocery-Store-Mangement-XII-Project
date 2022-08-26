@@ -11,7 +11,7 @@ option = None
 
 
 def app():
-    try:
+    #try:
         global isrunning
         global option
 
@@ -45,8 +45,8 @@ def app():
             process(option, db)
             input('Press enter to continue...')
             option = None
-    except:
-        print('Fatal Error Application has crashed!')
+    #except:
+        #print('Fatal Error Application has crashed!')
 
 
 if __name__ == "__main__":
