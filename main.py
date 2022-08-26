@@ -1,5 +1,10 @@
 import mysql.connector as c
 from Utils import *
+try:
+    import tabulate as t
+except:
+    print('Missing Required Library: Tabulate (pip install tabulate)')
+    input()
 
 isrunning = False
 option = None

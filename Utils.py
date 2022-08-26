@@ -144,22 +144,26 @@ def modify(cur):
     if v.lower() == 'add' or v.lower() == 'a':
         display(cur)
         print()
-        SNO = input("Enter Product No: ")
-        PRODUCTNAME = input("Enter product name: ")
-        MRP = input("Enter MRP: ")
-        PRICE = input("Enter Price: ")
-        STOCK = input("Enter Stock: ")
-        AV = input("Available: ")
-        EXPIERYDATE = input("Enter ExpieryDate: ")
-        DISCOUNT = input("Enter Discount: ")
-        PROFIT = input("Enter Profit Margin: ")
+        SNO = input("Enter Product No(integer): ")
+        PRODUCTNAME = input("Enter product name(text): ")
+        MRP = input("Enter MRP(integer): ")
+        PRICE = input("Enter Price(integer): ")
+        STOCK = input("Enter Stock(integer): ")
+        AV = input("Available(YES or NO): ")
+        EXPIERYDATE = input("Enter ExpieryDate(Date: YYYY-MM-DD): ")
+        DISCOUNT = input("Enter Discount(integer): ")
+        PROFIT = input("Enter Profit Margin(integer): ")
         try:
             change_values(v, cur, (
                 int(SNO), PRODUCTNAME, int(MRP), int(PRICE), int(STOCK), AV, EXPIERYDATE, int(DISCOUNT), int(PROFIT)))
         except:
-            print('Operation Failed!')
+            print()
+            print('Operation Failed Input Data Error Pls check datatype of inputted values!')
+            print()
             return
+        print()
         print("Values Added!")
+        print()
         display(cur)
     elif v.lower() == 'delete' or v.lower() == 'd':
         print()
@@ -185,7 +189,9 @@ def modify(cur):
             display(cur)
             print()
         except Exception:
+            print()
             print('Input Error')
+            print()
             return
     else:
         return
