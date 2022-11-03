@@ -43,6 +43,7 @@ def app():
                 loadtext("help.txt", 'p')
 
             process(option, db)
+            db.commit()
             input('Press enter to continue...')
             option = None
     except:

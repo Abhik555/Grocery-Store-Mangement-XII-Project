@@ -234,37 +234,41 @@ def search(cur):
 
 
 def find(cur, columns=None, condiitons=None):
-    d = load_data()
-    x = None
-    selection = ''
+    try:
+        d = load_data()
+        x = None
+        selection = ''
 
-    execute(cur, 'use ' + d[0])
+        execute(cur, 'use ' + d[0])
 
-    if columns is not None:
-        for i in columns:
-            if len(selection) == 0:
-                selection += i
+        if columns is not None:
+            for i in columns:
+                if len(selection) == 0:
+                    selection += i
+                else:
+                    selection += ',' + i
+        if columns is None:
+            if condiitons is None:
+                x = execute(cur, 'select *' + ' from ' + d[1])
             else:
-                selection += ',' + i
-    if columns is None:
-        if condiitons is None:
-            x = execute(cur, 'select *' + ' from ' + d[1])
+                x = execute(cur, 'select *' + ' from ' + d[1] + ' where ' + condiitons + ';')
         else:
-            x = execute(cur, 'select *' + ' from ' + d[1] + ' where ' + condiitons + ';')
-    else:
-        if condiitons is None:
-            x = execute(cur, 'select ' + selection + ' from ' + d[1])
+            if condiitons is None:
+                x = execute(cur, 'select ' + selection + ' from ' + d[1])
+            else:
+                x = execute(cur, 'select ' + selection + ' from ' + d[1] + ' where ' + condiitons + ';')
+        print()
+        if columns is not None:
+            print(
+                tabulate(x,
+                         columns)
+            )
         else:
-            x = execute(cur, 'select ' + selection + ' from ' + d[1] + ' where ' + condiitons + ';')
-    print()
-    if columns is not None:
-        print(
-            tabulate(x,
-                     columns)
-        )
-    else:
-        print(tabulate(x, ['SNO', 'PRODUCTNAME', 'MRP', 'PRICE', 'STOCK', 'AVAILABLE', 'EXPIERYDATE', 'DISCOUNT',
-                           'PROFIT MARGIN']))
+            print(tabulate(x, ['SNO', 'PRODUCTNAME', 'MRP', 'PRICE', 'STOCK', 'AVAILABLE', 'EXPIERYDATE', 'DISCOUNT',
+                               'PROFIT MARGIN']))
+    except:
+        print("Search Error Please Check Your Arguments For SQL Syntax Errors")
+
 
 
 def change_values(action, cursor, values, db_name=load_data()[0], table_name=load_data()[1]):
